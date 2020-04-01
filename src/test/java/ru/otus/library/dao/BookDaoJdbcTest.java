@@ -36,7 +36,7 @@ class BookDaoJdbcTest {
     @DisplayName("возвращать книгу и связанные сущности по id")
     @Test
     void shouldReturnBookById() {
-        Book actualBook = bookDao.getBookById(1L);
+        Book actualBook = bookDao.getBookByIdWithAllInfo(1L);
         List<Genre> expectedGenres = new ArrayList<>();
         expectedGenres.add(new Genre(2L,"Novel"));
         expectedGenres.add(new Genre(3L, "Comedy"));
@@ -50,7 +50,7 @@ class BookDaoJdbcTest {
     @Test
     void shouldReturnAllBooks() {
         int expectedSize = 3;
-        int actualSize = bookDao.getAllBooks().size();
+        int actualSize = bookDao.getAllBooksWithAllInfo().size();
 
         assertEquals(expectedSize, actualSize);
     }
@@ -65,7 +65,7 @@ class BookDaoJdbcTest {
         Book expectedBook = new Book(1L, "The Three Musketeers!!!", expectedAuthor, expectedGenres);
 
         bookDao.updateBook(expectedBook);
-        Book actualBook = bookDao.getBookById(1L);
+        Book actualBook = bookDao.getBookByIdWithAllInfo(1L);
 
         assertEquals(expectedBook, actualBook);
     }
@@ -74,8 +74,8 @@ class BookDaoJdbcTest {
     @Test
     void shouldDeleteBookById() {
         int expectedSize = 3;
-        bookDao.getBookById(1L);
-        int actualSize = bookDao.getAllBooks().size();
+        bookDao.getBookByIdWithAllInfo(1L);
+        int actualSize = bookDao.getAllBooksWithAllInfo().size();
 
         assertEquals(expectedSize, actualSize);
     }
@@ -84,7 +84,7 @@ class BookDaoJdbcTest {
     @Test
     void shouldReturnBooksByAuthor() {
         int expectedSize = 2;
-        int actualSize = bookDao.getAllBooksByAuthor(new Author(1L, "Alexandre Dumas")).size();
+        int actualSize = bookDao.getAllBooksByAuthorWithAllInfo(new Author(1L, "Alexandre Dumas")).size();
 
         assertEquals(expectedSize, actualSize);
     }

@@ -22,14 +22,14 @@ public class LibraryConsoleBot {
 
     private static Logger logger = LoggerFactory.getLogger(LibraryConsoleBot.class);
 
-    @ShellMethod(key = {"info", "i"}, value = "information about library bot")
+    @ShellMethod(key = {"info", "i"}, value = "Information about library bot")
     public void greeeting(){
         ioService.printRequest("Library Bot can help to find book you need. Database library contains artworks from all countries.");
     }
 
     @ShellMethod(key = {"books", "b"}, value = "Bot shows all books")
     public void showAllBooks(){
-        List<Book> books = bookService.getAllBooks();
+        List<Book> books = bookService.getAllBooksWithAllInfo();
         for(Book book : books){
             ioService.printRequest("Author - " + book.getAuthor().getName() + ", book name - " + book.getName());
         }
@@ -48,7 +48,7 @@ public class LibraryConsoleBot {
     public void showAllBooksByAuthor(){
         String authorName = ioService.printResponse("Enter author name");
         Author author = authorService.getAuthorByName(authorName);
-        List<Book> books = bookService.getAllBooksByAuthor(author);
+        List<Book> books = bookService.getAllBooksByAuthorWithAllInfo(author);
 
         ioService.printRequest("Books by " + author.getName() + ":");
         for(Book book : books){

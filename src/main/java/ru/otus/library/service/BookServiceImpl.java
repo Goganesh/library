@@ -15,12 +15,12 @@ public class BookServiceImpl implements BookService {
     private final BookDao bookDao;
 
     @Override
-    public List<Book> getAllBooks() {
-        return bookDao.getAllBooks();
+    public List<Book> getAllBooksWithAllInfo() {
+        return bookDao.getAllBooksWithAllInfo();
     }
 
     @Override
-    public List<Book> getAllBooksByAuthor(Author author) {
-        return bookDao.getAllBooksByAuthor(author);
+    public List<Book> getAllBooksByAuthorWithAllInfo(Author author) {
+        return bookDao.getAllBooksByAuthorWithAllInfo(author);
     }
 }

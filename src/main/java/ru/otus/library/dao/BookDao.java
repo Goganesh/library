@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface BookDao {
     long saveBook(Book book);
-    Book getBookById(long id);
-    List<Book> getAllBooksByAuthor(Author author);
-    List<Book> getAllBooks();
+    Book getBookByIdWithAllInfo(long id);
+    List<Book> getAllBooksByAuthorWithAllInfo(Author author);
+    List<Book> getAllBooksWithAllInfo();
     void updateBook(Book book);
     void deleteBook(Book book);
     void deleteBookById(long id);

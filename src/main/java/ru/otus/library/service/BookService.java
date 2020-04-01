@@ -5,6 +5,6 @@ import ru.otus.library.model.Book;
 import java.util.List;
 
 public interface BookService {
-    List<Book> getAllBooks();
-    List<Book> getAllBooksByAuthor(Author author);
+    List<Book> getAllBooksWithAllInfo();
+    List<Book> getAllBooksByAuthorWithAllInfo(Author author);
 }

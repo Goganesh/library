@@ -52,7 +52,7 @@ public class BookDaoJdbc implements BookDao {
     }
 
     @Override
-    public Book getBookById(long id) {
+    public Book getBookByIdWithAllInfo(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
 
         Map<Long, List<Genre>> bookToGenre = jdbc.query("select bookid, genreid from booktogenre where bookid = :id order by bookid",
@@ -67,7 +67,7 @@ public class BookDaoJdbc implements BookDao {
 
 
     @Override
-    public List<Book> getAllBooks() {
+    public List<Book> getAllBooksWithAllInfo() {
         Map<Long, List<Genre>> bookToGenre = jdbc.query("select bookid, genreid from booktogenre order by bookid",
                 new BookDaoJdbc.BookExtractor(genreDao));
         List<Book> books = jdbc.query("select * from books", new BookDaoJdbc.BookMapper(authorDao));
@@ -79,7 +79,7 @@ public class BookDaoJdbc implements BookDao {
     }
 
     @Override
-    public List<Book> getAllBooksByAuthor(Author author) {
+    public List<Book> getAllBooksByAuthorWithAllInfo(Author author) {
         Map<String, Object> params = Collections.singletonMap("authorid", author.getId());
         Map<Long, List<Genre>> bookToGenre = jdbc.query("select bookid, genreid from booktogenre order by bookid",
                 params, new BookDaoJdbc.BookExtractor(genreDao));
