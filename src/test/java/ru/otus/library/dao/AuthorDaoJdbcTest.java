@@ -11,12 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.library.model.Author;
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("Dao для работы с авторами")
+@DisplayName("Dao JDBC для работы с авторами")
 @JdbcTest
 @Import(AuthorDaoJdbc.class)
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 class AuthorDaoJdbcTest {
-    private static final int EXPECTED_AUTHOR_SIZE = 2;
 
     @Autowired
     private AuthorDao authorDao;

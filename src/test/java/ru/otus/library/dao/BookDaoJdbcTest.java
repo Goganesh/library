@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("Dao для работы с книгами")
+@DisplayName("Dao JDBC для работы с книгами")
 @JdbcTest
 @Import({BookDaoJdbc.class, AuthorDaoJdbc.class, GenreDaoJdbc.class})
 class BookDaoJdbcTest {

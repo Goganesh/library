@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-@Repository("authorDao")
+@Repository
 @AllArgsConstructor
 public class AuthorDaoJdbc implements  AuthorDao{
 

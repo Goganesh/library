@@ -10,14 +10,16 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.otus.library.model.Book;
 import ru.otus.library.model.Genre;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-@Repository("genreDao")
+@Repository
 @AllArgsConstructor
 public class GenreDaoJdbc implements GenreDao {
 
@@ -77,6 +79,17 @@ public class GenreDaoJdbc implements GenreDao {
                 "delete from genres where id = :id", params
         );
         logger.info("delete genre by id - " + id);
+    }
+
+    @Override
+    public List<Genre> getAllGenresByBook(Book book) {
+        Map<String, Object> params = Collections.singletonMap("id", book.getId());
+        List<Long> genreIds = jdbc.queryForList("select genreid from booktogenre where bookid = :id", params, Long.class);
+        List<Genre> genres = new ArrayList<>();
+        for(Long id : genreIds){
+            genres.add(getGenreById(id));
+        }
+        return genres;
     }
 
     private static class GenreMapper implements RowMapper<Genre> {
