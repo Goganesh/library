@@ -88,7 +88,8 @@ public class BookDaoJdbc implements BookDao {
                 .addValue("name", book.getName())
                 .addValue("authorId", book.getAuthor().getId());
         jdbc.update("update books set name = :name, authorId = :authorId where id = :id", params);
-        List<Long> oldGenresId = getIdGenreList(genreDao.getAllGenresByBook(book));
+        Book oldBook = getBookByIdWithAllInfo(book.getId());
+        List<Long> oldGenresId = getIdGenreList(oldBook.getGenres());
         List<Long> newGenresId = getIdGenreList(book.getGenres());
         updateGenreLink(newGenresId, oldGenresId, book);
 

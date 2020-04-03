@@ -81,17 +81,6 @@ public class GenreDaoJdbc implements GenreDao {
         logger.info("delete genre by id - " + id);
     }
 
-    @Override
-    public List<Genre> getAllGenresByBook(Book book) {
-        Map<String, Object> params = Collections.singletonMap("id", book.getId());
-        List<Long> genreIds = jdbc.queryForList("select genreid from booktogenre where bookid = :id", params, Long.class);
-        List<Genre> genres = new ArrayList<>();
-        for(Long id : genreIds){
-            genres.add(getGenreById(id));
-        }
-        return genres;
-    }
-
     private static class GenreMapper implements RowMapper<Genre> {
         @Override
         public Genre mapRow(ResultSet resultSet, int i) throws SQLException {
