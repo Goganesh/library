@@ -35,7 +35,7 @@ public class GenreDaoJdbc implements GenreDao {
 
         jdbc.update("insert into genres (name) values (:name)", params, keyHolder);
         genre.setId(keyHolder.getKey().longValue());
-        logger.info("asve genre - " + genre.toString());
+        logger.info("save genre - " + genre.toString());
 
         return genre.getId();
     }

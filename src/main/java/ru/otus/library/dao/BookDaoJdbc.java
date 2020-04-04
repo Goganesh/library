@@ -35,7 +35,7 @@ public class BookDaoJdbc implements BookDao {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", book.getName())
                 .addValue("authorId", book.getAuthor().getId());
-        jdbc.update("insert into books (name, authorId) values (:name, :authorId)", params, keyHolder);
+        jdbc.update("insert into books (name, author_id) values (:name, :authorId)", params, keyHolder);
         book.setId(keyHolder.getKey().longValue());
         insertGenreToBook(book);
         logger.info("save book - " + book.toString());
@@ -46,23 +46,23 @@ public class BookDaoJdbc implements BookDao {
     @Override
     public Book getBookByIdWithAllInfo(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
-
-        Map<Long, List<Genre>> bookToGenre = jdbc.query("select bookid, genreid from booktogenre where bookid = :id order by bookid",
+        Map<Long, List<Genre>> bookToGenre = jdbc.query("select book_id, genre_id from book_genre where book_id = :id order by book_id",
                 params, new BookDaoJdbc.BookToGenreExtractor(genreDao));
 
-        Book book = jdbc.queryForObject("select * from books where id = :id", params, new BookDaoJdbc.BookMapper(authorDao));
+        Book book = jdbc.queryForObject("select * from books join authors on books.author_id = authors.id where books.id = :id",
+                params, new BookDaoJdbc.BookMapper(authorDao));
         mapBookToGenre(book, bookToGenre);
         logger.info("book found - " + book.toString());
 
         return book;
     }
 
-
     @Override
     public List<Book> getAllBooksWithAllInfo() {
-        Map<Long, List<Genre>> bookToGenre = jdbc.query("select bookid, genreid from booktogenre order by bookid",
+        Map<Long, List<Genre>> bookToGenre = jdbc.query("select book_id, genre_id from book_genre order by book_id",
                 new BookDaoJdbc.BookToGenreExtractor(genreDao));
-        List<Book> books = jdbc.query("select * from books", new BookDaoJdbc.BookMapper(authorDao));
+        List<Book> books = jdbc.query("select * from books join authors on books.author_id = authors.id",
+                new BookDaoJdbc.BookMapper(authorDao));
         mapBooksToGenre(books, bookToGenre);
         logger.info("all books - " + books.size());
 
@@ -71,10 +71,10 @@ public class BookDaoJdbc implements BookDao {
 
     @Override
     public List<Book> getAllBooksByAuthorWithAllInfo(Author author) {
-        Map<String, Object> params = Collections.singletonMap("authorid", author.getId());
-        Map<Long, List<Genre>> bookToGenre = jdbc.query("select bookid, genreid from booktogenre order by bookid",
+        Map<String, Object> params = Collections.singletonMap("authorId", author.getId());
+        Map<Long, List<Genre>> bookToGenre = jdbc.query("select book_id, genre_id from book_genre order by book_id",
                 params, new BookDaoJdbc.BookToGenreExtractor(genreDao));
-        List<Book> books = jdbc.query("select * from books where authorid = :authorid", params, new BookDaoJdbc.BookMapper(authorDao));
+        List<Book> books = jdbc.query("select * from books join authors on books.author_id = authors.id where author_id = :authorId", params, new BookDaoJdbc.BookMapper(authorDao));
         mapBooksToGenre(books, bookToGenre);
         logger.info("all books by author - " + books.size());
 
@@ -87,7 +87,7 @@ public class BookDaoJdbc implements BookDao {
                 .addValue("id", book.getId())
                 .addValue("name", book.getName())
                 .addValue("authorId", book.getAuthor().getId());
-        jdbc.update("update books set name = :name, authorId = :authorId where id = :id", params);
+        jdbc.update("update books set name = :name, author_id = :authorId where id = :id", params);
         Book oldBook = getBookByIdWithAllInfo(book.getId());
         List<Long> oldGenresId = getIdGenreList(oldBook.getGenres());
         List<Long> newGenresId = getIdGenreList(book.getGenres());
@@ -105,7 +105,6 @@ public class BookDaoJdbc implements BookDao {
     public void deleteBookById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
         jdbc.update("delete from books where id = :id", params);
-        jdbc.update("delete from booktogenre where bookid = :id", params);
         logger.info("delete book by id - " + id);
     }
 
@@ -124,28 +123,31 @@ public class BookDaoJdbc implements BookDao {
             SqlParameterSource addParams = new MapSqlParameterSource()
                     .addValue("bookId", bookId)
                     .addValue("genreId", genre.getId());
-            jdbc.update("insert into bookToGenre (bookId, genreId) values (:bookId, :genreId)", addParams, new GeneratedKeyHolder());
+            jdbc.update("insert into book_genre (book_id, genre_id) values (:bookId, :genreId)", addParams, new GeneratedKeyHolder());
         }
     }
 
     private void updateGenreLink(List<Long> newGenreId, List<Long> oldGenreID, Book book){
         List<Map <String, Object>> batchValues = new ArrayList<>();
         for(Long id : oldGenreID){
-            batchValues.add(
-                    new MapSqlParameterSource("bookid", book.getId())
-                            .addValue("genreid", id)
+            batchValues.add(new MapSqlParameterSource("bookId", book.getId())
+                            .addValue("genreId", id)
                             .getValues());
         }
-        jdbc.batchUpdate("delete from booktogenre where bookid = :bookid and genreid = :genreid",
+        int[] count = jdbc.batchUpdate("delete from book_genre where book_id = :bookId and genre_id = :genreId",
                 batchValues.toArray(new Map[batchValues.size()]));
+        logger.info("batch delete size " + count.length);
+
+        batchValues = new ArrayList<>();
 
         for(Long id : newGenreId){
-            SqlParameterSource params = new MapSqlParameterSource()
-                    .addValue("bookid", book.getId())
-                    .addValue("genreid", id);
-            jdbc.update("insert into booktogenre (bookid, genreid) values (:bookid, :genreid)"
-                        , params, new GeneratedKeyHolder());
+            batchValues.add(new MapSqlParameterSource("bookId", book.getId())
+                    .addValue("genreId", id)
+                    .getValues());
         }
+        count = jdbc.batchUpdate("insert into book_genre (book_id, genre_id) values (:bookId, :genreId)",
+                batchValues.toArray(new Map[batchValues.size()]));
+        logger.info("batch insert size " + count.length);
     }
 
     private void mapBooksToGenre(List<Book> books, Map<Long, List<Genre>> bookToGenre){
@@ -168,9 +170,9 @@ public class BookDaoJdbc implements BookDao {
             Map<Long, List<Genre>> bookToGenre = new LinkedHashMap<>();
 
             while (resultSet.next()){
-                long bookId = resultSet.getLong("bookid");
+                long bookId = resultSet.getLong("book_id");
                 bookToGenre.putIfAbsent(bookId, new ArrayList<>());
-                long genreId = resultSet.getLong("genreId");
+                long genreId = resultSet.getLong("genre_id");
                 Genre genre = genreDao.getGenreById(genreId);
                 bookToGenre.get(bookId).add(genre);
             }
@@ -185,10 +187,11 @@ public class BookDaoJdbc implements BookDao {
 
         @Override
         public Book mapRow(ResultSet resultSet, int i) throws SQLException {
-            long id = resultSet.getLong("id");
-            String name = resultSet.getString("name");
-            long authorId = resultSet.getLong("authorId");
-            Author author = authorDao.getAuthorById(authorId);
+            long id = resultSet.getLong("books.id");
+            String name = resultSet.getString("books.name");
+            long authorId = resultSet.getLong("author_id");
+            String authorName = resultSet.getString("authors.name");
+            Author author = new Author(authorId, authorName);//authorDao.getAuthorById(authorId);
             return new Book(id, name, author);
         }
     }

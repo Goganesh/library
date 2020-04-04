@@ -59,8 +59,8 @@ class BookDaoJdbcTest {
     @Test
     void shouldUpdateBook() {
         List<Genre> expectedGenres = new ArrayList<>();
-        expectedGenres.add(new Genre(2L,"Novel"));
         expectedGenres.add(new Genre(1L, "Drama"));
+        expectedGenres.add(new Genre(2L,"Novel"));
         Author expectedAuthor = new Author(1L, "Alexandre Dumas");
         Book expectedBook = new Book(1L, "The Three Musketeers!!!", expectedAuthor, expectedGenres);
 

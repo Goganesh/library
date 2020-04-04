@@ -25,7 +25,7 @@ class AuthorDaoJdbcTest {
     void shouldGenerateIdForNewAuthor() {
         Author author = new Author("Basiladze Georgy");
         long actualId = authorDao.saveAuthor(author);
-        long expectedId = 3L;
+        long expectedId = 4L;
 
         assertEquals(expectedId, actualId);
     }
@@ -33,8 +33,8 @@ class AuthorDaoJdbcTest {
     @DisplayName("возвращать автора по его id")
     @Test
     void shouldReturnExpectedAuthorById() {
-        Author actualAuthor = authorDao.getAuthorById(3L);
-        Author expectedAuthor = new Author(3L, "Basiladze Georgy");
+        Author actualAuthor = authorDao.getAuthorById(4L);
+        Author expectedAuthor = new Author(4L, "Basiladze Georgy");
 
         assertEquals(expectedAuthor, actualAuthor);
     }
@@ -53,7 +53,7 @@ class AuthorDaoJdbcTest {
     @Test
     void shouldDeleteAuthorById() {
         int expectedSize = authorDao.getAllAuthors().size() - 1;
-        authorDao.deleteAuthorById(2L);
+        authorDao.deleteAuthorById(3L);
         int actualSize = authorDao.getAllAuthors().size();
 
         assertEquals(expectedSize, actualSize);
@@ -63,7 +63,7 @@ class AuthorDaoJdbcTest {
     @DisplayName("возвращать всех авторов")
     @Test
     void shouldReturnAllAuthors() {
-        int expectedSize = 2;
+        int expectedSize = 3;
         int actualSize = authorDao.getAllAuthors().size();
 
         assertEquals(expectedSize, actualSize);
