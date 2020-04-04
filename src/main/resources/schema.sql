@@ -26,3 +26,11 @@ create table book_genre(
     genre_id bigint references genres(id),
     primary key (book_id, genre_id)
 );
+
+drop table if exists reviews;
+create table reviews(
+    id bigint auto_increment,
+    review varchar(255),
+    book_id bigint references books(id),
+    primary key(id)
+);

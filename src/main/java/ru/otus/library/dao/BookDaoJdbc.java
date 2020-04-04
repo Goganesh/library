@@ -58,6 +58,11 @@ public class BookDaoJdbc implements BookDao {
     }
 
     @Override
+    public Book getBookByNameWithAllInfo(String bookName) {
+        return null;
+    }
+
+    @Override
     public List<Book> getAllBooksWithAllInfo() {
         Map<Long, List<Genre>> bookToGenre = jdbc.query("select book_id, genre_id from book_genre order by book_id",
                 new BookDaoJdbc.BookToGenreExtractor(genreDao));
@@ -120,10 +125,10 @@ public class BookDaoJdbc implements BookDao {
         long bookId = book.getId();
 
         for(Genre genre : book.getGenres()){
-            SqlParameterSource addParams = new MapSqlParameterSource()
+            SqlParameterSource params = new MapSqlParameterSource()
                     .addValue("bookId", bookId)
                     .addValue("genreId", genre.getId());
-            jdbc.update("insert into book_genre (book_id, genre_id) values (:bookId, :genreId)", addParams, new GeneratedKeyHolder());
+            jdbc.update("insert into book_genre (book_id, genre_id) values (:bookId, :genreId)", params);
         }
     }
 
@@ -151,9 +156,7 @@ public class BookDaoJdbc implements BookDao {
     }
 
     private void mapBooksToGenre(List<Book> books, Map<Long, List<Genre>> bookToGenre){
-        for(Book book : books){
-            mapBookToGenre(book, bookToGenre);
-        }
+        books.forEach(book -> mapBookToGenre(book, bookToGenre));
     }
 
     private void mapBookToGenre(Book book, Map<Long, List<Genre>> bookToGenre){

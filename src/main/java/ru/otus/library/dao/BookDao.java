@@ -9,6 +9,7 @@ import java.util.List;
 public interface BookDao {
     long saveBook(Book book);
     Book getBookByIdWithAllInfo(long id);
+    Book getBookByNameWithAllInfo(String bookName);
     List<Book> getAllBooksByAuthorWithAllInfo(Author author);
     List<Book> getAllBooksWithAllInfo();
     void updateBook(Book book);

@@ -1,10 +1,9 @@
 package ru.otus.library.service;
 
 import org.springframework.stereotype.Service;
-
 import java.util.Scanner;
 
-@Service("ioService")
+@Service
 public class IOConsoleService implements IOService {
 
     @Override
