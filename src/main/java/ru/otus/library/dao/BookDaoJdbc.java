@@ -46,7 +46,8 @@ public class BookDaoJdbc implements BookDao {
     @Override
     public Book getBookByIdWithAllInfo(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
-        Map<Long, List<Genre>> bookToGenre = jdbc.query("select book_id, genre_id from book_genre where book_id = :id order by book_id",
+        Map<Long, List<Genre>> bookToGenre = jdbc.query("select book_id, genre_id, genres.name from book_genre join genres on  book_genre.genre_id = genres.id" +
+                        " where book_id = :id order by book_id",
                 params, new BookDaoJdbc.BookToGenreExtractor(genreDao));
 
         Book book = jdbc.queryForObject("select * from books join authors on books.author_id = authors.id where books.id = :id",
@@ -64,7 +65,8 @@ public class BookDaoJdbc implements BookDao {
 
     @Override
     public List<Book> getAllBooksWithAllInfo() {
-        Map<Long, List<Genre>> bookToGenre = jdbc.query("select book_id, genre_id from book_genre order by book_id",
+        Map<Long, List<Genre>> bookToGenre = jdbc.query("select book_id, genre_id, genres.name from book_genre join genres " +
+                        "on book_genre.genre_id = genres.id order by book_id",
                 new BookDaoJdbc.BookToGenreExtractor(genreDao));
         List<Book> books = jdbc.query("select * from books join authors on books.author_id = authors.id",
                 new BookDaoJdbc.BookMapper(authorDao));
@@ -77,7 +79,8 @@ public class BookDaoJdbc implements BookDao {
     @Override
     public List<Book> getAllBooksByAuthorWithAllInfo(Author author) {
         Map<String, Object> params = Collections.singletonMap("authorId", author.getId());
-        Map<Long, List<Genre>> bookToGenre = jdbc.query("select book_id, genre_id from book_genre order by book_id",
+        Map<Long, List<Genre>> bookToGenre = jdbc.query("select book_id, genre_id, genres.name from book_genre join genres on" +
+                        " book_genre.genre_id = genres.id order by book_id",
                 params, new BookDaoJdbc.BookToGenreExtractor(genreDao));
         List<Book> books = jdbc.query("select * from books join authors on books.author_id = authors.id where author_id = :authorId", params, new BookDaoJdbc.BookMapper(authorDao));
         mapBooksToGenre(books, bookToGenre);
@@ -176,7 +179,8 @@ public class BookDaoJdbc implements BookDao {
                 long bookId = resultSet.getLong("book_id");
                 bookToGenre.putIfAbsent(bookId, new ArrayList<>());
                 long genreId = resultSet.getLong("genre_id");
-                Genre genre = genreDao.getGenreById(genreId);
+                String genreName = resultSet.getString("genres.name");
+                Genre genre = new Genre(genreId, genreName);
                 bookToGenre.get(bookId).add(genre);
             }
 
