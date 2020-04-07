@@ -24,8 +24,6 @@ import java.util.*;
 public class BookDaoJdbc implements BookDao {
 
     private final NamedParameterJdbcOperations jdbc;
-    private final AuthorDao authorDao;
-    private final GenreDao genreDao;
 
     private static Logger logger = LoggerFactory.getLogger(BookDaoJdbc.class);
 
@@ -48,10 +46,10 @@ public class BookDaoJdbc implements BookDao {
         Map<String, Object> params = Collections.singletonMap("id", id);
         Map<Long, List<Genre>> bookToGenre = jdbc.query("select book_id, genre_id, genres.name from book_genre join genres on  book_genre.genre_id = genres.id" +
                         " where book_id = :id order by book_id",
-                params, new BookDaoJdbc.BookToGenreExtractor(genreDao));
+                params, new BookDaoJdbc.BookToGenreExtractor());
 
         Book book = jdbc.queryForObject("select * from books join authors on books.author_id = authors.id where books.id = :id",
-                params, new BookDaoJdbc.BookMapper(authorDao));
+                params, new BookDaoJdbc.BookMapper());
         mapBookToGenre(book, bookToGenre);
         logger.info("book found - " + book.toString());
 
@@ -67,9 +65,9 @@ public class BookDaoJdbc implements BookDao {
     public List<Book> getAllBooksWithAllInfo() {
         Map<Long, List<Genre>> bookToGenre = jdbc.query("select book_id, genre_id, genres.name from book_genre join genres " +
                         "on book_genre.genre_id = genres.id order by book_id",
-                new BookDaoJdbc.BookToGenreExtractor(genreDao));
+                new BookDaoJdbc.BookToGenreExtractor());
         List<Book> books = jdbc.query("select * from books join authors on books.author_id = authors.id",
-                new BookDaoJdbc.BookMapper(authorDao));
+                new BookDaoJdbc.BookMapper());
         mapBooksToGenre(books, bookToGenre);
         logger.info("all books - " + books.size());
 
@@ -81,8 +79,9 @@ public class BookDaoJdbc implements BookDao {
         Map<String, Object> params = Collections.singletonMap("authorId", author.getId());
         Map<Long, List<Genre>> bookToGenre = jdbc.query("select book_id, genre_id, genres.name from book_genre join genres on" +
                         " book_genre.genre_id = genres.id order by book_id",
-                params, new BookDaoJdbc.BookToGenreExtractor(genreDao));
-        List<Book> books = jdbc.query("select * from books join authors on books.author_id = authors.id where author_id = :authorId", params, new BookDaoJdbc.BookMapper(authorDao));
+                params, new BookDaoJdbc.BookToGenreExtractor());
+        List<Book> books = jdbc.query("select * from books join authors on books.author_id = authors.id where author_id = :authorId",
+                params, new BookDaoJdbc.BookMapper());
         mapBooksToGenre(books, bookToGenre);
         logger.info("all books by author - " + books.size());
 
@@ -169,7 +168,6 @@ public class BookDaoJdbc implements BookDao {
 
     @AllArgsConstructor
     private static class BookToGenreExtractor implements ResultSetExtractor<Map<Long, List<Genre>>> {
-        private final GenreDao genreDao;
 
         @Override
         public Map<Long, List<Genre>> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
@@ -190,7 +188,6 @@ public class BookDaoJdbc implements BookDao {
 
     @AllArgsConstructor
     private static class BookMapper implements RowMapper<Book> {
-        private final AuthorDao authorDao;
 
         @Override
         public Book mapRow(ResultSet resultSet, int i) throws SQLException {
@@ -198,7 +195,7 @@ public class BookDaoJdbc implements BookDao {
             String name = resultSet.getString("books.name");
             long authorId = resultSet.getLong("author_id");
             String authorName = resultSet.getString("authors.name");
-            Author author = new Author(authorId, authorName);//authorDao.getAuthorById(authorId);
+            Author author = new Author(authorId, authorName);
             return new Book(id, name, author);
         }
     }
