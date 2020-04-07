@@ -73,8 +73,8 @@ class BookDaoJdbcTest {
     @DisplayName("удалять книгу по id")
     @Test
     void shouldDeleteBookById() {
-        int expectedSize = 3;
-        bookDao.getBookByIdWithAllInfo(1L);
+        int expectedSize = 2;
+        bookDao.deleteBookById(1L);
         int actualSize = bookDao.getAllBooksWithAllInfo().size();
 
         assertEquals(expectedSize, actualSize);
