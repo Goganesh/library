@@ -11,10 +11,7 @@ import ru.otus.library.model.Book;
 import ru.otus.library.model.Genre;
 import ru.otus.library.model.Review;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.List;
 
 @Repository
@@ -42,9 +39,11 @@ public class ReviewDaoJpa implements ReviewDao {
 
     @Override
     public List<Review> getReviewsByBook(Book book) {
+        EntityGraph<?> entityGraph = em.getEntityGraph("review-book-entity-graph");
         TypedQuery<Review> query = em.createQuery("select s from Review s where s.book = :book",
                 Review.class);
         query.setParameter("book", book);
+        query.setHint("javax.persistence.fetchgraph", entityGraph);
         return query.getResultList();
     }
 
@@ -57,8 +56,10 @@ public class ReviewDaoJpa implements ReviewDao {
 
     @Override
     public List<Review> getAllReviews() {
+        EntityGraph<?> entityGraph = em.getEntityGraph("review-book-entity-graph");
         TypedQuery<Review> query = em.createQuery("select s from Review s",
                 Review.class);
+        query.setHint("javax.persistence.fetchgraph", entityGraph);
         return query.getResultList();
     }
 
