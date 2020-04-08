@@ -31,6 +31,6 @@ drop table if exists reviews;
 create table reviews(
     id bigint auto_increment,
     review varchar(255),
-    book_id bigint references books(id),
+    book_id bigint,
     primary key(id)
 );
