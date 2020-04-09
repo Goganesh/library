@@ -4,10 +4,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.library.dao.AuthorDao;
 import ru.otus.library.model.Author;
-
 import java.util.List;
 
-@Service("authorService")
+@Service
 @AllArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
 

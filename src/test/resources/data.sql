@@ -16,3 +16,7 @@ INSERT INTO BOOK_GENRE VALUES(1, 3);
 INSERT INTO BOOK_GENRE VALUES(2, 1);
 INSERT INTO BOOK_GENRE VALUES(2, 2);
 INSERT INTO BOOK_GENRE VALUES(3, 1);
+
+INSERT INTO REVIEWS VALUES(1, 'A great novel, imbued with the spirit of unclean maximalism', 1);
+INSERT INTO REVIEWS VALUES(2, 'Good novel, read the whole trilogy', 1);
+INSERT INTO REVIEWS VALUES(3, 'I recommend to everyone', 2);

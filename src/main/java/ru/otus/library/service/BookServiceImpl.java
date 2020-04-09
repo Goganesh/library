@@ -8,7 +8,7 @@ import ru.otus.library.model.Book;
 
 import java.util.List;
 
-@Service("bookService")
+@Service
 @AllArgsConstructor
 public class BookServiceImpl implements BookService {
 
@@ -22,5 +22,10 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> getAllBooksByAuthorWithAllInfo(Author author) {
         return bookDao.getAllBooksByAuthorWithAllInfo(author);
+    }
+
+    @Override
+    public Book getBookByNameWithAllInfo(String bookName) {
+        return bookDao.getBookByNameWithAllInfo(bookName);
     }
 }
