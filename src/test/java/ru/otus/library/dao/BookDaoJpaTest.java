@@ -91,7 +91,7 @@ class BookDaoJpaTest {
         Book expectedBook = new Book(1L, "The Three Musketeers!!!", expectedAuthor, expectedGenres);
 
         bookDao.updateBook(expectedBook);
-        Book actualBook = bookDao.getBookByIdWithAllInfo(1L);
+        Book actualBook = em.find(Book.class,1L);
 
         assertEquals(expectedBook, actualBook);
     }
@@ -99,8 +99,8 @@ class BookDaoJpaTest {
     @DisplayName("удалять книгу по id")
     @Test
     void shouldDeleteBookById() {
-        int expectedSize = 3;
-        bookDao.getBookByIdWithAllInfo(1L);
+        int expectedSize = 2;
+        bookDao.deleteBookById(1L);
         int actualSize = bookDao.getAllBooksWithAllInfo().size();
 
         assertEquals(expectedSize, actualSize);
