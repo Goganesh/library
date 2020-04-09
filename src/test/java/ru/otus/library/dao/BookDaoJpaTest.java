@@ -99,10 +99,10 @@ class BookDaoJpaTest {
     @DisplayName("удалять книгу по id")
     @Test
     void shouldDeleteBookById() {
-        int expectedSize = 2;
+        Book expectedBook = null;
         bookDao.deleteBookById(1L);
-        int actualSize = bookDao.getAllBooksWithAllInfo().size();
+        Book actualBook = em.find(Book.class, 1L);
 
-        assertEquals(expectedSize, actualSize);
+        assertEquals(expectedBook, actualBook);
     }
 }
