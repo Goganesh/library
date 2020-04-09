@@ -9,7 +9,7 @@ drop table if exists books;
 create table books (
     id bigint auto_increment,
     name varchar(255),
-    author_id bigint references authors(id),
+    author_id bigint references authors(id) on delete cascade,
     primary key(id)
 );
 
@@ -23,7 +23,7 @@ create table genres(
 drop table if exists book_genre;
 create table book_genre(
     book_id bigint references books(id) on delete cascade,
-    genre_id bigint references genres(id),
+    genre_id bigint references genres(id) on delete cascade,
     primary key (book_id, genre_id)
 );
 
@@ -31,6 +31,6 @@ drop table if exists reviews;
 create table reviews(
     id bigint auto_increment,
     review varchar(255),
-    book_id bigint,
+    book_id bigint references books(id) on delete cascade,
     primary key(id)
 );
