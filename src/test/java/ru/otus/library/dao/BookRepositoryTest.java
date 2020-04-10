@@ -19,6 +19,14 @@ class BookRepositoryTest {
     @Autowired
     private TestEntityManager em;
 
+    @DisplayName("возвращать все книги и связанные сущности по имени")
+    @Test
+    void shouldReturnAllBooks() {
+        int expectedSize = 3;
+        int actualSize = repository.findAll().size();
+
+        assertEquals(expectedSize, actualSize);
+    }
 
 
     @DisplayName("возвращать книгу и связанные сущности по имени")
