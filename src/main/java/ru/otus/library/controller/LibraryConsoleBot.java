@@ -69,10 +69,9 @@ public class LibraryConsoleBot {
         String bookReview = ioService.printResponse("Enter review by book - " + book.getName());
         Review review = new Review();
         review.setReview(bookReview);
-        long reviewId = reviewService.saveReview(review);
+        reviewService.saveReview(review);
         review.setBook(book);
         reviewService.saveReview(review);
-
-        System.out.println(reviewId);
+        ioService.printRequest("review saved");
     }
 }

@@ -10,6 +10,8 @@ import javax.persistence.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@NamedEntityGraph(name = "review-book-entity-graph",
+        attributeNodes = {@NamedAttributeNode("book")})
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
