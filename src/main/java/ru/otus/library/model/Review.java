@@ -20,7 +20,7 @@ public class Review {
     @Column(name = "review")
     private String review;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     private Book book;
 
