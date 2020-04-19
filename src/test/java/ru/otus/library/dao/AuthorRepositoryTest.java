@@ -3,27 +3,26 @@ package ru.otus.library.dao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.annotation.DirtiesContext;
 import ru.otus.library.model.Author;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Repository для работы с авторами")
-@DataJpaTest
+@DataMongoTest
 class AuthorRepositoryTest {
 
     @Autowired
     private AuthorRepository repository;
 
-    @Autowired
-    private TestEntityManager em;
-
-    @DisplayName("сохранять нового автора и возвращать id")
+    @DisplayName("возвращать автора по имени")
     @Test
     void shouldReturnAuthorByName() {
-        Author actualAuthor = repository.findByName("Alexandre Dumas");
-        Author expectedAuthor = em.find(Author.class, 1L);
+        String expectedName = "Alexandre Dumas";
+        Author actualAuthor = repository.findByName(expectedName);
 
-        assertEquals(expectedAuthor, actualAuthor);
+        assertEquals(expectedName, actualAuthor.getName());
     }
 }

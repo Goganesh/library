@@ -12,7 +12,6 @@ import ru.otus.library.service.AuthorService;
 import ru.otus.library.service.BookService;
 import ru.otus.library.service.IOService;
 import ru.otus.library.service.ReviewService;
-
 import java.util.List;
 
 @ShellComponent

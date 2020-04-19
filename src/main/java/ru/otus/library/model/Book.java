@@ -3,36 +3,34 @@ package ru.otus.library.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 import java.util.List;
 
-@Entity
-@Table(name = "books")
+@Document(collection = "books")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@NamedEntityGraph(name = "book-author-genres-entity-graph",
-        attributeNodes = {
-                @NamedAttributeNode("author"),
-                @NamedAttributeNode("genres")})
 public class Book {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private String id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Field
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "author_id")
+    @Field
     private Author author;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "book_genre", joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    @Field
     private List<Genre> genres;
 
-    public Book(long id, String name, Author author) {
+    @DBRef
+    private List<Review> reviews;
+
+    public Book(String id, String name, Author author) {
         this.id = id;
         this.name = name;
         this.author = author;
