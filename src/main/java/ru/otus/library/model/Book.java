@@ -27,8 +27,6 @@ public class Book {
     @Field
     private List<Genre> genres;
 
-    @DBRef
-    private List<Review> reviews;
 
     public Book(String id, String name, Author author) {
         this.id = id;

@@ -16,7 +16,6 @@ public class Genre {
     @Id
     private String id;
     @Field
-    //@Indexed(unique = true)
     private String name;
 
     public Genre(String name) {
