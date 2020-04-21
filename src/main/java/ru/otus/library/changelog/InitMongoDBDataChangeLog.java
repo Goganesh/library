@@ -53,7 +53,6 @@ public class InitMongoDBDataChangeLog {
         Query genreQuery;
         List<String> genresName;
 
-
         Book book1 = new Book();
         book1.setName("The Three Musketeers");
         authorQuery = new Query();

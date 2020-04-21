@@ -1,0 +1,12 @@
+spring:
+    data:
+        mongodb:
+            database: library
+            #authentication-database: admin
+            #username: root
+            #password: root
+            port: 0
+            #host: localhost
+logging:
+    level:
+        ROOT: INFO
