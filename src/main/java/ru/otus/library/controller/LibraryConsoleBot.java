@@ -66,10 +66,7 @@ public class LibraryConsoleBot {
         String bookName = ioService.printResponse("Enter book name");
         Book book = bookService.getBookByNameWithAllInfo(bookName);
         String bookReview = ioService.printResponse("Enter review by book - " + book.getName());
-        Review review = new Review();
-        review.setReview(bookReview);
-        reviewService.saveReview(review);
-        review.setBook(book);
+        Review review = new Review(bookReview, book);
         reviewService.saveReview(review);
         ioService.printRequest("review saved");
     }

@@ -8,4 +8,5 @@ import java.util.List;
 public interface ReviewRepository extends MongoRepository<Review, String> {
 
     List<Review> findByBook(Book book);
+    void deleteByBook(Book book);
 }
