@@ -18,7 +18,9 @@ public class Review {
     @Field
     private String review;
 
+
     @Field
+
     private Book book;
 
     public Review(String review, Book book) {
