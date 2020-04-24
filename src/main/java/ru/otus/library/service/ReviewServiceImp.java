@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import ru.otus.library.dao.ReviewRepository;
 import ru.otus.library.model.Book;
 import ru.otus.library.model.Review;
-
 import java.util.List;
 
 @Service
@@ -22,7 +21,7 @@ public class ReviewServiceImp implements ReviewService {
     }
 
     @Override
-    public long saveReview(Review review) {
-        return repository.saveAndFlush(review).getId();
+    public String saveReview(Review review) {
+        return repository.save(review).getId();
     }
 }

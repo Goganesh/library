@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ReviewService {
     List<Review> getReviewsByBook(Book book);
-    long saveReview(Review review);
+    String saveReview(Review review);
 }
